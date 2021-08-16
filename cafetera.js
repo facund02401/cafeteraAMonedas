@@ -68,7 +68,7 @@ function preguntarPedido() { // ARREGLAR EL ACCESO A LO QUE IMPRIME
     }
     else {
         let pedido = menu.find(bebida => bebida.nombre == pregunta);
-        // va a devolver index of el string que se pide en el prompt
+        // va a devolver el objeto entero
         return pedido
     }
 };
@@ -134,7 +134,7 @@ function crearBebida() {
 
 
 // INSTRUCCIONES
-alert("Descripción de funcionamiento:\n Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'apagar' para apagar la cafetera, 'recursos' para conocer la cantidad de recursos disponibles y 'dinero' para conocer la cantidad de dinero al interior de la maquina.")
+alert("Descripción de funcionamiento:\n Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'APAGAR' para apagar la cafetera, 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la cantidad de dinero al interior de la maquina y 'AGREGAR' para agregar una nueva bebida a la cafetera.")
 //MAQUINA
 const funcionando = true;
 while (funcionando) {
