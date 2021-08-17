@@ -19,12 +19,13 @@ class Bebida {
     };
 };
 // AGREGANDO BEBIDAS
+let cappuccino = new Bebida("cappuccino", 100, 150, 28, 150);
+agregar(cappuccino);
 let espresso = new Bebida("espresso", 50, 0, 14, 55);
 agregar(espresso);
 let latte = new Bebida("latte", 50, 100, 14, 120);
 agregar(latte);
-let cappuccino = new Bebida("cappuccino", 100, 150, 28, 150);
-agregar(cappuccino);
+
 
 // FUNCIONES
 
@@ -52,7 +53,7 @@ function cincuenta() {
     return monto * 50
 };
 
-function preguntarPedido() { // ARREGLAR EL ACCESO A LO QUE IMPRIME
+function preguntarPedido() {
     let pregunta = prompt(`Indique su pedido: Espresso: $${espresso.costo}, Latte: $${latte.costo}, Cappuccino: $${cappuccino.costo}`).toLowerCase();
     if (pregunta == "recursos") {
         return pregunta
@@ -60,6 +61,9 @@ function preguntarPedido() { // ARREGLAR EL ACCESO A LO QUE IMPRIME
     else if (pregunta == "apagar") {
         return pregunta
     }
+    else if (pregunta == "ordenar") {
+         return pregunta
+     }
     else if (pregunta == "dinero") {
         return pregunta
     }
@@ -96,7 +100,7 @@ function cobrar(pedido) {
         alert("El dinero no ingreso correctamente")
     }
     else {
-        if (dineroIngresado < precio){
+        if (dineroIngresado < precio) {
             alert("La cantidad de dinero ingresada no es suficiente para completar el pedido.");
         }
         else {
@@ -132,9 +136,18 @@ function crearBebida() {
     alert(`Ahora puede tomar ${nombreNuevaBebida} en esta maquina.`)
 };
 
+function ordenar() {
+    let ordenarPor = prompt("¿Desea ordenarlo por cantidad de agua, leche, cafe o costo? ");
+    let ordenado = menu.sort((a, b) => a[ordenarPor] - b[ordenarPor])
+    let paraMostrar = ""
+    for (let i = 0; i < ordenado.length; i++){
+        paraMostrar += ordenado[i]["nombre"] + " " + ordenado[i][ordenarPor] + "\n" ;  
+};
+    alert(paraMostrar)
+}
 
 // INSTRUCCIONES
-alert("Descripción de funcionamiento:\n Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'APAGAR' para apagar la cafetera, 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la cantidad de dinero al interior de la maquina y 'AGREGAR' para agregar una nueva bebida a la cafetera.")
+alert("Descripción de funcionamiento:\n Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'APAGAR' para apagar la cafetera, 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la cantidad de dinero al interior de la maquina, 'AGREGAR' para agregar una nueva bebida a la cafetera y 'ORDENAR' para ver un listado de las bebidas ordenadas segun la caracteristica que se indique.")
 //MAQUINA
 const funcionando = true;
 while (funcionando) {
@@ -147,6 +160,9 @@ while (funcionando) {
     else if (pedido == "apagar") {
         break;
     }
+    else if (pedido == "ordenar") {
+        ordenar();
+    }
     else if (pedido == "dinero") {
         alert("Cantidad de dinero recaudado: $" + dineroMaquina)
     }
@@ -155,7 +171,7 @@ while (funcionando) {
         continue;
     }
     else {
-        if (pedido == false) {
+        if (pedido == undefined) {
             alert("El pedido no se encuentra en el menu")
         }
         else {
