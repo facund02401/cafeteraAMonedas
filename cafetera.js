@@ -1,5 +1,3 @@
-let menu = [];
-
 const recursos = {
     agua: 300,
     leche: 200,
@@ -19,19 +17,44 @@ class Bebida {
     };
 };
 // AGREGANDO BEBIDAS
-let cappuccino = new Bebida("cappuccino", 100, 150, 28, 150);
-agregar(cappuccino);
-let espresso = new Bebida("espresso", 50, 0, 14, 55);
-agregar(espresso);
-let latte = new Bebida("latte", 50, 100, 14, 120);
-agregar(latte);
+var menu;
+if (localStorage.getItem('menu') == null) {
+    menu = [];
+    let cappuccino = new Bebida("cappuccino", 100, 150, 28, 150);
+    agregar(cappuccino);
+    let espresso = new Bebida("espresso", 50, 0, 14, 55);
+    agregar(espresso);
+    let latte = new Bebida("latte", 50, 100, 14, 120);
+    agregar(latte);
+}
+else {
+    menu = []
+    menuAlmacenado = JSON.parse(localStorage.getItem("menu"))
+    for (elementoAlmacenado of menuAlmacenado) {
+        agregar(new Bebida(elementoAlmacenado.nombre, elementoAlmacenado.agua, elementoAlmacenado.leche, elementoAlmacenado.cafe, elementoAlmacenado.costo))
+    }
+
+}
+;
 
 
 // FUNCIONES
-
 function agregar(bebida) {
     menu.push(bebida);
 };
+
+function mostrarMenu() {
+    const ulMenu = document.getElementById('menu');
+    ulMenu.innerHTML = 'Menu:';
+
+    for (bebida of menu) {
+        console.log(bebida.nombre[0].toUpperCase() + bebida.nombre.slice(1));
+        let nuevoElemento = document.createElement('li');
+        nuevoElemento.innerText = `${bebida.nombre[0].toUpperCase() + bebida.nombre.slice(1)}: $${bebida.costo}`;
+        ulMenu.append(nuevoElemento);
+    }
+
+}
 
 function cinco() {
     let monto = parseInt(prompt("¿Cuántas monedas de $5 ingresa? "));
@@ -54,7 +77,7 @@ function cincuenta() {
 };
 
 function preguntarPedido() {
-    let pregunta = prompt(`Indique su pedido: Espresso: $${espresso.costo}, Latte: $${latte.costo}, Cappuccino: $${cappuccino.costo}`).toLowerCase();
+    let pregunta = prompt(`Indique su pedido: `).toLowerCase();
     if (pregunta == "recursos") {
         return pregunta
     }
@@ -62,8 +85,8 @@ function preguntarPedido() {
         return pregunta
     }
     else if (pregunta == "ordenar") {
-         return pregunta
-     }
+        return pregunta
+    }
     else if (pregunta == "dinero") {
         return pregunta
     }
@@ -118,39 +141,52 @@ function comprobarRecursos(pedido) {
     for (const recurso in recursos) {
         if (pedido[recurso] > recursos[recurso]) {
             alert("Es imposible entregar su pedido por falta de recursos.");
+            for (cadaLi of document.getElementsByTagName('li')) {
+                if (cadaLi.innerText.includes(pedido["nombre"].slice(1))) {
+                    cadaLi.parentNode.removeChild(cadaLi)
+                }
+            };
             return false;
         };
     };
-};
+}
 
 function crearBebida() {
-    let nuevaBebida = prompt("Para crear una nueva bebida indique sus datos en el siguiente orden y con el formato indicado: \n nombre de la bebida, cantidad de ml de agua en numeros, cantidad de ml de leche en numeros, cantidad de gr de cafe en numeros")
+    let nuevaBebida = prompt("Para crear una nueva bebida indique sus datos en el siguiente orden y con el formato indicado: \n nombre de la bebida, cantidad de ml de agua en numeros, cantidad de ml de leche en numeros, cantidad de gr de cafe en numeros, costo")
     let dividiendoPrompt = nuevaBebida.split(",")
-    let nombreNuevaBebida = dividiendoPrompt[0]
+    let nombreNuevaBebida = dividiendoPrompt[0].toLowerCase();
     let aguaNuevaBebida = parseInt(dividiendoPrompt[1])
     let lecheNuevaBebida = parseInt(dividiendoPrompt[2])
     let cafeNuevaBebida = parseInt(dividiendoPrompt[3])
     let costoNuevaBebida = parseInt(dividiendoPrompt[4])
     let bebidaAgregada = new Bebida(nombreNuevaBebida, aguaNuevaBebida, lecheNuevaBebida, cafeNuevaBebida, costoNuevaBebida)
     agregar(bebidaAgregada)
+    let almacenarBebidaLS = localStorage.setItem('menu', JSON.stringify(menu))
     alert(`Ahora puede tomar ${nombreNuevaBebida} en esta maquina.`)
 };
 
 function ordenar() {
     let ordenarPor = prompt("¿Desea ordenarlo por cantidad de agua, leche, cafe o costo? ");
     let ordenado = menu.sort((a, b) => a[ordenarPor] - b[ordenarPor])
-    let paraMostrar = ""
-    for (let i = 0; i < ordenado.length; i++){
-        paraMostrar += ordenado[i]["nombre"] + " " + ordenado[i][ordenarPor] + "\n" ;  
-};
-    alert(paraMostrar)
+    let divMostrar = document.createElement('div')
+    document.body.append(divMostrar);
+    let paraMostrar = document.createElement('p')
+    divMostrar.append(paraMostrar)
+    paraMostrar.innerText = `Ordenado por ${ordenarPor}: \n `
+    for (let i = 0; i < ordenado.length; i++) {
+        paraMostrar.innerText += `${ordenado[i]["nombre"]}  ${ordenado[i][ordenarPor]} \n `;
+    };
 }
 
+
+
 // INSTRUCCIONES
+
 alert("Descripción de funcionamiento:\n Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'APAGAR' para apagar la cafetera, 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la cantidad de dinero al interior de la maquina, 'AGREGAR' para agregar una nueva bebida a la cafetera y 'ORDENAR' para ver un listado de las bebidas ordenadas segun la caracteristica que se indique.")
 //MAQUINA
 const funcionando = true;
 while (funcionando) {
+    mostrarMenu()
     let pedido = preguntarPedido();
     if (pedido == "recursos") {
         for (const elemento in recursos) {
@@ -172,7 +208,7 @@ while (funcionando) {
     }
     else {
         if (pedido == undefined) {
-            alert("El pedido no se encuentra en el menu")
+            alert("El pedido no se encuentra en el menu. Para salir escriba APAGAR.")
         }
         else {
             if (comprobarRecursos(pedido) == false) {
