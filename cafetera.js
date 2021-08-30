@@ -18,6 +18,7 @@ class Bebida {
 };
 // AGREGANDO BEBIDAS
 var menu;
+// si no hay nada almacenado, va a crear solo las tres bebidas mencionadas
 if (localStorage.getItem('menu') == null) {
     menu = [];
     let cappuccino = new Bebida("cappuccino", 100, 150, 28, 150);
@@ -27,9 +28,10 @@ if (localStorage.getItem('menu') == null) {
     let latte = new Bebida("latte", 50, 100, 14, 120);
     agregar(latte);
 }
+// si hay elementos guardados, los va a recuperar, parsear y mostrar en menu
 else {
     menu = []
-    menuAlmacenado = JSON.parse(localStorage.getItem("menu"))
+    let menuAlmacenado = JSON.parse(localStorage.getItem("menu"))
     for (elementoAlmacenado of menuAlmacenado) {
         agregar(new Bebida(elementoAlmacenado.nombre, elementoAlmacenado.agua, elementoAlmacenado.leche, elementoAlmacenado.cafe, elementoAlmacenado.costo))
     }
@@ -144,6 +146,12 @@ function comprobarRecursos(pedido) {
             for (cadaLi of document.getElementsByTagName('li')) {
                 if (cadaLi.innerText.includes(pedido["nombre"].slice(1))) {
                     cadaLi.parentNode.removeChild(cadaLi)
+                    for(let aEliminar of menu){
+                        if(aEliminar === pedido)
+                        menu.splice(aEliminar, 1);
+                        console.log(menu)
+                    }
+
                 }
             };
             return false;
