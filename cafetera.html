@@ -11,12 +11,50 @@
 
 <body>
     <h1>Cafetera a monedas</h1>
-    <div>
+    <p>
+        Descripción de funcionamiento: <br>
+        Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'APAGAR' para apagar la cafetera,
+        'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la cantidad de dinero al
+        interior de la maquina, 'AGREGAR' para agregar una nueva bebida a la cafetera y 'ORDENAR' para ver un listado de
+        las bebidas ordenadas segun la caracteristica que se indique.
+    </p>
+    <div id="menuGeneral">
         <ul id="menu">
             Menu:
-            
+
         </ul>
     </div>
+    <form action="" id="formOrdenes">
+        <label for="otroPedido">Otra orden:</label>
+        <input type="text" placeholder="Indique su orden" id="orden" name="orden">
+        <button>Enviar</button>
+    </form>
+    <form action="" id="formNuevaBebida" class="visible escondido">
+        <p>Para crear una nueva bebida indique:</p>
+        <label for="nmbNuevaBebida">Nombre de la bebida:</label>
+        <input type="text" name="nombreNB"> <br>
+        <label for="agNuevaBebida">Cantidad de agua en ml:</label>
+        <input type="text" name="aguaNB"><br>
+        <label for="leNuevaBebida">Cantidad de leche en ml:</label>
+        <input type="text" name="lecheNB"><br>
+        <label for="cafNuevaBebida">Cantidad de cafe en gr:</label>
+        <input type="text" name="cafeNB"><br>
+        <label for="cstNuevaBebida">Costo en $:</label>
+        <input type="text" name="costoNB"> <br>
+
+        <button id="listoNB">Listo</button>
+        <div id="puedeTomar">
+            
+        </div>
+    </form>
+
+    <div class="dinero escondido">
+        <button class="botonDinero" id="cinco">$5</button>
+        <button class="botonDinero" id="diez">$10</button>
+        <button class="botonDinero" id="veinte">$20</button>
+        <button class="botonDinero" id="cincuenta">$50</button>
+    </div>
+    <button id="entregarDinero">Entregar Dinero</button>
     <script src="./cafetera.js"></script>
 </body>
 

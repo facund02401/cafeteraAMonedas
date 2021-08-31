@@ -39,7 +39,7 @@ else {
 }
 ;
 
-
+const divDinero = document.querySelector('.dinero');
 // FUNCIONES
 function agregar(bebida) {
     menu.push(bebida);
@@ -48,15 +48,50 @@ function agregar(bebida) {
 function mostrarMenu() {
     const ulMenu = document.getElementById('menu');
     ulMenu.innerHTML = 'Menu:';
+    const divMenu = document.getElementById("menuGeneral");
 
     for (bebida of menu) {
         console.log(bebida.nombre[0].toUpperCase() + bebida.nombre.slice(1));
         let nuevoElemento = document.createElement('li');
         nuevoElemento.innerText = `${bebida.nombre[0].toUpperCase() + bebida.nombre.slice(1)}: $${bebida.costo}`;
         ulMenu.append(nuevoElemento);
+        //crear botones
+        let nuevoBoton = document.createElement('button');
+        nuevoBoton.innerText = `${bebida.nombre[0].toUpperCase() + bebida.nombre.slice(1)}`;
+        nuevoBoton.setAttribute("id", `${bebida.nombre}`);
+        divMenu.append(nuevoBoton);
+        //addEventListener a cada boton
+        nuevoBoton.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            divDinero.classList.toggle('escondido');
+            let pedido = menu.find(bebida => bebida.nombre == nuevoBoton.id);
+            //comprueba recursos
+            if (comprobarRecursos(pedido) == false) {
+                for (cadaLi of document.getElementsByTagName('li')) {
+                    if (cadaLi.innerText.includes(pedido["nombre"].slice(1))) {
+                        //saca el elemento del menu
+                        cadaLi.parentNode.removeChild(cadaLi)
+                        //elimina el elemento del array menu para que no se muestre en el siguiente ciclo
+                        for (let aEliminar of menu) {
+                            if (aEliminar === pedido)
+                                menu.splice(aEliminar, 1);
+                            console.log(menu)
+                        }
+
+                    }
+                };
+
+            }
+            else {
+                cobrar(pedido)
+            };
+
+        })
+
     }
 
-}
+};
 
 function cinco() {
     let monto = parseInt(prompt("¿Cuántas monedas de $5 ingresa? "));
@@ -101,15 +136,19 @@ function preguntarPedido() {
         return pedido
     }
 };
+ 
+
 
 
 function cobrar(pedido) {
     let precio = pedido.costo;
-    alert(`Debe abonar $${precio}`);
-    monedaCinco = cinco();
-    monedaDiez = diez();
-    billeteVeinte = veinte();
-    billeteCincuenta = cincuenta();
+    const precioCobro = document.createElement('p');
+precioCobro.innerText = `Debe abonar $${precio}. Agregue su dinero con los botones.`;  
+document.body.append(precioCobro)  
+   // monedaCinco = cinco();
+   // monedaDiez = diez();
+   // billeteVeinte = veinte();
+   // billeteCincuenta = cincuenta();
 
     function descontarRecurso(pedido) {
         let descuentoAgua = pedido.agua;
@@ -120,58 +159,96 @@ function cobrar(pedido) {
         recursos["leche"] -= descuentoLeche;
     };
 
-    let dineroIngresado = monedaCinco + monedaDiez + billeteCincuenta + billeteVeinte;
-    if (isNaN(dineroIngresado)) {
-        alert("El dinero no ingreso correctamente")
+         
+
+
+
+let montoTotal = 0;
+let mostrarDinero = document.createElement('p');
+divDinero.appendChild(mostrarDinero)
+mostrarDinero.innerText = `Monto total ingresado es de: $${montoTotal}`;
+function actualizarDinero(){
+    mostrarDinero.innerText = `Monto total ingresado es de: $${montoTotal}`
+};
+
+const dineroCinco = document.getElementById('cinco');
+dineroCinco.addEventListener('click', function(){ 
+    montoTotal += 5;
+    actualizarDinero()
+});
+
+const dineroDiez = document.getElementById('diez');
+dineroDiez.addEventListener('click', function(){ 
+    montoTotal += 10;
+    actualizarDinero()
+});
+const dineroVeinte = document.getElementById('veinte');
+dineroVeinte.addEventListener('click', function(){ 
+    montoTotal += 20;
+    actualizarDinero()
+});
+const dineroCincuenta = document.getElementById('cincuenta');
+dineroCincuenta.addEventListener('click', function(){ 
+    montoTotal += 50;
+    actualizarDinero()
+});
+
+//};
+const entregarDinero = document.getElementById('entregarDinero');
+entregarDinero.addEventListener('click', function(){
+    if (montoTotal < precio) {
+        const avisoNoAlcanza = document.createElement('p');
+        avisoNoAlcanza.innerText = "La cantidad de dinero ingresada no es suficiente para completar el pedido.";
+        document.body.append(avisoNoAlcanza)
     }
     else {
-        if (dineroIngresado < precio) {
-            alert("La cantidad de dinero ingresada no es suficiente para completar el pedido.");
-        }
-        else {
-            let vuelto = dineroIngresado - precio;
-            dineroMaquina = dineroMaquina + precio;
-            alert(`Su vuelto es de $${vuelto}. Se le entregara su pedido`);
-            descontarRecurso(pedido);
-        };
-
+        let vuelto = montoTotal - precio;
+        dineroMaquina = dineroMaquina + precio;
+        const avisoVuelto = document.createElement('p');
+        avisoVuelto.innerText = `Su vuelto es de $${vuelto}. Se le entregara su pedido`;
+        document.body.append(avisoVuelto)
+        descontarRecurso(pedido);
     };
+
+
+})
 };
+
+
 
 function comprobarRecursos(pedido) {
 
     for (const recurso in recursos) {
         if (pedido[recurso] > recursos[recurso]) {
-            alert("Es imposible entregar su pedido por falta de recursos.");
-            for (cadaLi of document.getElementsByTagName('li')) {
-                if (cadaLi.innerText.includes(pedido["nombre"].slice(1))) {
-                    cadaLi.parentNode.removeChild(cadaLi)
-                    for(let aEliminar of menu){
-                        if(aEliminar === pedido)
-                        menu.splice(aEliminar, 1);
-                        console.log(menu)
-                    }
+            const avisoFaltaRecurso = document.createElement('p');
+            avisoFaltaRecurso.innerText = "Es imposible entregar su pedido por falta de recursos.";
+            document.body.append(avisoFaltaRecurso)
 
-                }
-            };
             return false;
         };
     };
 }
 
-function crearBebida() {
-    let nuevaBebida = prompt("Para crear una nueva bebida indique sus datos en el siguiente orden y con el formato indicado: \n nombre de la bebida, cantidad de ml de agua en numeros, cantidad de ml de leche en numeros, cantidad de gr de cafe en numeros, costo")
-    let dividiendoPrompt = nuevaBebida.split(",")
-    let nombreNuevaBebida = dividiendoPrompt[0].toLowerCase();
-    let aguaNuevaBebida = parseInt(dividiendoPrompt[1])
-    let lecheNuevaBebida = parseInt(dividiendoPrompt[2])
-    let cafeNuevaBebida = parseInt(dividiendoPrompt[3])
-    let costoNuevaBebida = parseInt(dividiendoPrompt[4])
-    let bebidaAgregada = new Bebida(nombreNuevaBebida, aguaNuevaBebida, lecheNuevaBebida, cafeNuevaBebida, costoNuevaBebida)
-    agregar(bebidaAgregada)
-    let almacenarBebidaLS = localStorage.setItem('menu', JSON.stringify(menu))
-    alert(`Ahora puede tomar ${nombreNuevaBebida} en esta maquina.`)
-};
+//function crearBebida() {
+//    const formNB = document.getElementById('formNuevaBebida');
+//    formNB.classList.toggle('escondido');
+//    const botonNb = document.getElementById('listoNB');
+//    botonNb.addEventListener('submit', function (e) {
+//        let nombreNuevaBebida = formNB.elements.nombreNB.value.toLowerCase();
+//        let aguaNuevaBebida = parseInt(formNB.elements.aguaNB.value)
+//        let lecheNuevaBebida = parseInt(formNB.elements.lecheNB.value)
+//        let cafeNuevaBebida = parseInt(formNB.elements.cafeNB.value)
+//        let costoNuevaBebida = parseInt(formNB.elements.costoNB.value)
+//        let bebidaAgregada = new Bebida(nombreNuevaBebida, aguaNuevaBebida, lecheNuevaBebida, cafeNuevaBebida, costoNuevaBebida)
+//        agregar(bebidaAgregada)
+//        let almacenarBebidaLS = localStorage.setItem('menu', JSON.stringify(menu));
+//        const divNB = document.getElementById('puedeTomar');
+//        let textoNB = document.createElement('p');
+//        textoNB.innerText = `Ahora puede tomar ${nombreNuevaBebida} en esta maquina.` 
+//        divNB.appendChild(textoNB)
+//        location.reload();
+//    })
+//};
 
 function ordenar() {
     let ordenarPor = prompt("¿Desea ordenarlo por cantidad de agua, leche, cafe o costo? ");
@@ -188,43 +265,58 @@ function ordenar() {
 
 
 
-// INSTRUCCIONES
+// BOTONES
+//const formOrdenes = document.getElementById("formOrdenes");
+//formOrdenes.addEventListener("submit", function (e) {
+//    e.preventDefault();
+//    const orden = formOrdenes.elements.orden.value;
+//});
+const formNB = document.getElementById('formNuevaBebida');
+const botonNb = document.getElementById('listoNB');
+    botonNb.addEventListener('click', function (e) {
+        e.preventDefault();
+        let nombreNuevaBebida = formNB.elements.nombreNB.value.toLowerCase();
+        let aguaNuevaBebida = parseInt(formNB.elements.aguaNB.value)
+        let lecheNuevaBebida = parseInt(formNB.elements.lecheNB.value)
+        let cafeNuevaBebida = parseInt(formNB.elements.cafeNB.value)
+        let costoNuevaBebida = parseInt(formNB.elements.costoNB.value)
+        let bebidaAgregada = new Bebida(nombreNuevaBebida, aguaNuevaBebida, lecheNuevaBebida, cafeNuevaBebida, costoNuevaBebida)
+        agregar(bebidaAgregada)
+        localStorage.setItem('menu', JSON.stringify(menu));
+        const divNB = document.getElementById('puedeTomar');
+        let textoNB = document.createElement('p');
+        textoNB.innerText = `Ahora puede tomar ${nombreNuevaBebida} en esta maquina.` 
+        divNB.appendChild(textoNB)
+        location.reload();
+    })
 
-alert("Descripción de funcionamiento:\n Además de los comandos señalados al iniciar la cafetera, se puede ingresar 'APAGAR' para apagar la cafetera, 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la cantidad de dinero al interior de la maquina, 'AGREGAR' para agregar una nueva bebida a la cafetera y 'ORDENAR' para ver un listado de las bebidas ordenadas segun la caracteristica que se indique.")
 //MAQUINA
-const funcionando = true;
-while (funcionando) {
-    mostrarMenu()
-    let pedido = preguntarPedido();
-    if (pedido == "recursos") {
+//const funcionando = true;
+//while (funcionando) {
+mostrarMenu()
+
+//  let pedido = preguntarPedido();
+const formOrdenes = document.getElementById("formOrdenes");
+formOrdenes.addEventListener("submit", function (e) {
+    e.preventDefault();
+    let orden = formOrdenes.elements.orden.value;
+    if (orden == "recursos") {
         for (const elemento in recursos) {
             alert(elemento + ": " + recursos[elemento])
         };
     }
-    else if (pedido == "apagar") {
-        break;
-    }
-    else if (pedido == "ordenar") {
+    else if (orden == "ordenar") {
         ordenar();
     }
-    else if (pedido == "dinero") {
+    else if (orden == "dinero") {
         alert("Cantidad de dinero recaudado: $" + dineroMaquina)
     }
-    else if (pedido == "agregar") {
-        crearBebida();
-        continue;
-    }
-    else {
-        if (pedido == undefined) {
-            alert("El pedido no se encuentra en el menu. Para salir escriba APAGAR.")
-        }
-        else {
-            if (comprobarRecursos(pedido) == false) {
-                continue
-            }
-            else {
-                cobrar(pedido)
-            };
-        };
+    else if (orden == "agregar") {
+        
+    formNB.classList.toggle('escondido');
+    
+
     };
-};
+    formOrdenes.elements.orden.value = '';
+
+});
