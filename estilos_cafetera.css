@@ -4,7 +4,20 @@
 body{
     background-color: grey;
 }
+
+.tituloCafetera { grid-area: tituloCafetera; }
+  
+.instrucciones { grid-area: instrucciones; }
+  
+.ordenes { 
+    grid-area: ordenes;
+    place-self: center;
+}
+
 .contenedor{
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 10% 200px 150px auto;
     margin: auto;
     width: 50%;
     min-height: 700px;
@@ -13,6 +26,16 @@ body{
     color: whitesmoke;
     border: honeydew solid 2px;
     padding: 16px;
+    grid-template-areas:
+      "tituloCafetera tituloCafetera"
+      "instrucciones  menuGeneral"
+      "ordenes menuGeneral"
+      ". vacio";
+}
+.vacio {
+    grid-area: vacio ;
+    height: 150px;
+    width: 150px;
 }
 h1{
     font-family: 'Cabin', sans-serif;
@@ -27,21 +50,24 @@ h1{
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: rgb(202, 6, 6);
+    background: linear-gradient(143deg, rgba(232,26,24,1) 0%, rgba(121,9,9,1) 78%, rgba(89,0,0,1) 100%);
     box-shadow: 4px 5px 15px 0px #000000;
-    left: 210px;
+    margin: 0 auto;
     top: 40px;
     z-index: 1;
     
 }
 .descripcion{
-    width: 40%;
+    width: 80%;
     background-color: rgb(185, 185, 5);
     padding: 16px;
     padding-top: 32px;
     position: relative;
     left: 50px;
     font-family: 'Indie Flower', cursive;
+    color: rgb(105, 102, 102);
+    font-weight: bold;
+    
 }
 
 #menu{
@@ -53,14 +79,15 @@ h1{
 }
 
 #menuGeneral{
-    position: absolute;
-    width: 10%;
-    height: 500px;
+    position: relative;
+    width: 80%;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
-    left: 950px;
-    bottom: 130px;
+    /* left: 78%;
+    bottom:100%; */
     justify-content: space-evenly;
+    grid-area: menuGeneral;
 }
 
 #menuGeneral button{
@@ -111,6 +138,7 @@ form button, button{
 .dinero{
     margin: 50px;
     width: 250px;
+    height: 250px;
     display: flex;
     justify-content: space-between;
 }

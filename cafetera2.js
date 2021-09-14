@@ -95,16 +95,16 @@ $(document).ready(function () {
         //comprueba recursos
         if (comprobarRecursos(pedido) == false) {
             $(`#${pedido.nombre}`).prop('disabled', true)
-            $('#botonDeshabilitado').show();
+            $('#botonDeshabilitado').fadeIn();
             setTimeout(() => {
-                $('#botonDeshabilitado').hide();
+                $('#botonDeshabilitado').fadeOut();
             }, 3000);
             $('#entregarDinero').hide();
             for (let cadaLi of $('#menuGeneral li')) {
                 if (cadaLi.textContent.includes(pedido.nombre)) {
                     //saca el elemento del menu
                     cadaLi.remove();
-                    
+
                 };
             };
         }
@@ -130,8 +130,8 @@ $(document).ready(function () {
 
     function cobrar(pedido) {
         precio = pedido.costo;
-        $('.dinero').show();
-        $('#entregarDinero').show();
+        $('.dinero').fadeIn();
+        $('#entregarDinero').fadeIn();
         actualizarDinero();
         $('#precioCobro').text(`Debe abonar $${precio}. Agregue su dinero con los botones.`);
         $('#precioCobro').show()
@@ -161,7 +161,7 @@ $(document).ready(function () {
             $('.texto-dinero').append(`${dineroMaquina}`);
         }
         else {
-            $('.texto-dinero').append(JSON.parse(localStorage('dinero')));
+            $('.texto-dinero').append(JSON.parse(localStorage.getItem('dinero')));
         }
     };
     //------------------------------------------------------------------------------------
@@ -213,13 +213,14 @@ $(document).ready(function () {
         $('#precioCobro').hide();
         if (montoTotal < precio) {
             pedido = '';
-            $('#avisoDineroNoAlcanza').show();
+            $('#avisoDineroNoAlcanza').fadeIn();
             setTimeout(() => {
-                $('#avisoDineroNoAlcanza').hide();
+                $('#avisoDineroNoAlcanza').fadeOut();
                 setTimeout(() => {
                     $('#vuelto').hide();
                 }, 2000)
-            }, 3000)
+            }, 3000);
+            $(".dinero").hide()
             montoTotal = 0;
         }
         else {
@@ -233,6 +234,7 @@ $(document).ready(function () {
             localStorage.setItem('recursos', JSON.stringify(recursos))
             localStorage.setItem('dinero', dineroMaquina);
         };
+        $('#entregarDinero').fadeOut();
     });
     //----------------------------------------------------------------------------------------------
     // BOTON MOSTRAR RECURSOS OK
@@ -267,7 +269,7 @@ $(document).ready(function () {
         agregar(bebidaAgregada)
         localStorage.setItem('menu', JSON.stringify(menu));
         $('#puedeTomar p').prepend(`Ahora puede tomar ${nombreNuevaBebida} en esta maquina.`);
-        $('#botonPuedeTomar').show();
+        $('#botonPuedeTomar').slideDown();
     });
 
     // BOTON NUEVA BEBIDA PUEDE TOMAR
@@ -278,7 +280,7 @@ $(document).ready(function () {
         $('#lecheNB').val('');
         $('#cafeNB').val('');
         $('#costoNB').val('');
-        $('#formNuevaBebida').hide();
+        $('#formNuevaBebida').slideUp();
         $('#botonPuedeTomar').hide()
         $('#puedeTomar p').text('')
         iniciarCafetera();
@@ -286,7 +288,7 @@ $(document).ready(function () {
     //--------------------------------------------------------------------------------------
     // Boton ok mostrar dinero
     $('#mostrarDinero button').click(() => {
-        $('#mostrarDinero').hide();
+        $('#mostrarDinero').slideUp("slow");
     });
 
     //----------------------------------------------------------------------------------------
@@ -300,66 +302,67 @@ $(document).ready(function () {
 
     $('#formOrdenes button').on("click", function (e) {
         e.preventDefault();
-        if ($('#orden').val().toLowerCase() == "recursos") {
-            $('.dinero').hide()
-            $('#formNuevaBebida').hide();
-            $('#cobro').hide();
-            $('#mostrarDinero').hide();
-            $('#vuelto').hide()
-            $('#ordenar').hide()
-            $('#mostrarRecursos').show();
-            mostrarRecursos()
-        }
-        else if ($('#orden').val().toLowerCase() == "ordenar") {
-            $('.dinero').hide()
-            $('#formNuevaBebida').hide();
-            $('#cobro').hide();
-            $('#mostrarDinero').hide();
-            $('#vuelto').hide();
-            $('#mostrarRecursos').hide();
-            $('#ordenar').show();
-            ordenar();
-        }
-        else if ($('#orden').val().toLowerCase() == "dinero") {
-            $('.dinero').hide()
-            $('#formNuevaBebida').hide();
-            $('#cobro').hide();
-            $('#mostrarDinero').show();
-            $('#vuelto').hide();
-            $('#mostrarRecursos').hide();
-            $('#ordenar').hide();
-            mostrarDineroMaquina();
-        }
-        else if ($('#orden').val().toLowerCase() == "agregar") {
-            $('.dinero').hide()
-            $('#formNuevaBebida').show();
-            $('#cobro').hide();
-            $('#mostrarDinero').hide();
-            $('#vuelto').hide();
-            $('#mostrarRecursos').hide();
-            $('#ordenar').hide();
-        }
-        else if ($('#orden').val().toLowerCase() == "ordenar") {
-            $('.dinero').hide()
-            $('#formNuevaBebida').hide();
-            $('#cobro').hide();
-            $('#mostrarDinero').hide();
-            $('#vuelto').hide();
-            $('#mostrarRecursos').hide();
-            $('#ordenar').show();
-        }
-        else if ($('#orden').val() == '' || $('#orden').val() == " ") {
-            $('.dinero').hide()
-            $('#formNuevaBebida').hide();
-            $('#cobro').hide();
-            $('#mostrarDinero').hide();
-            $('#vuelto').hide();
-            $('#mostrarRecursos').hide();
-            $('#ordenar').hide();
-            $('#formOrdenes').after('<p id="ingreseOrdenAlert" class="alerta">Ingrese una orden valida</p>');
-            setTimeout(() => {
-                $('#ingreseOrdenAlert').remove();
-            }, 2000);
+        switch ($('#orden').val().toLowerCase()) {
+            case "recursos":
+                $('.dinero').hide()
+                $('#formNuevaBebida').hide();
+                $('#cobro').hide();
+                $('#mostrarDinero').hide();
+                $('#vuelto').hide()
+                $('#ordenar').hide()
+                $('#mostrarRecursos').show();
+                mostrarRecursos()
+                break;
+            case "ordenar":
+                $('.dinero').hide()
+                $('#formNuevaBebida').hide();
+                $('#cobro').hide();
+                $('#mostrarDinero').hide();
+                $('#vuelto').hide();
+                $('#mostrarRecursos').hide();
+                $('#ordenar').show();
+                ordenar();
+                break;
+            case "dinero":
+                $('.dinero').hide()
+                $('#formNuevaBebida').hide();
+                $('#cobro').hide();
+                $('#mostrarDinero').slideDown();
+                $('#vuelto').hide();
+                $('#mostrarRecursos').hide();
+                $('#ordenar').hide();
+                mostrarDineroMaquina();
+                break;
+            case "agregar":
+                $('.dinero').hide()
+                $('#formNuevaBebida').slideDown();
+                $('#cobro').hide();
+                $('#mostrarDinero').hide();
+                $('#vuelto').hide();
+                $('#mostrarRecursos').hide();
+                $('#ordenar').hide();
+                break;
+            case "ordenar":
+                $('.dinero').hide()
+                $('#formNuevaBebida').hide();
+                $('#cobro').hide();
+                $('#mostrarDinero').hide();
+                $('#vuelto').hide();
+                $('#mostrarRecursos').hide();
+                $('#ordenar').show();
+                break;
+            default:
+                $('.dinero').hide()
+                $('#formNuevaBebida').hide();
+                $('#cobro').hide();
+                $('#mostrarDinero').hide();
+                $('#vuelto').hide();
+                $('#mostrarRecursos').hide();
+                $('#ordenar').hide();
+                $('#formOrdenes').after('<p id="ingreseOrdenAlert" class="alerta">Ingrese una orden valida</p>');
+                setTimeout(() => {
+                    $('#ingreseOrdenAlert').remove();
+                }, 2000);
         };
         $('#orden').val('');
     });

@@ -21,14 +21,17 @@
 
 <body>
     <div class="contenedor">
-        <h1>CAFETERA A MONEDAS</h1>
-        <div class="chinche"></div>
-        <p class="descripcion">
-            Comandos de cafetera: <br>
-            Ingrese la palabra 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la
-            cantidad de dinero al
-            interior de la maquina, 'AGREGAR' para agregar una nueva bebida a la cafetera, 'ORDENAR' para recibir una lista ordenada segun un criterio.
-        </p>
+        <h1 class="tituloCafetera">CAFETERA A MONEDAS</h1>
+        <div class="instrucciones">
+            <div class="chinche"></div>
+            <p class="descripcion">
+                Comandos de cafetera: <br>
+                Ingrese la palabra 'RECURSOS' para conocer la cantidad de recursos disponibles, 'DINERO' para conocer la
+                cantidad de dinero al
+                interior de la maquina, 'AGREGAR' para agregar una nueva bebida a la cafetera, 'ORDENAR' para recibir
+                una lista ordenada segun un criterio.
+            </p>
+        </div>
         <!-- div menu -->
         <div id="menuGeneral">
             <ul id="menu">
@@ -38,7 +41,7 @@
         </div>
         <!-- termina div menu -->
         <!-- ordenes -->
-        <form action="" id="formOrdenes">
+        <form action="" id="formOrdenes" class="ordenes">
             <label for="otroPedido">Otra orden:</label>
             <input type="text" placeholder="Indique su orden" id="orden" name="orden">
             <button>Enviar</button>
@@ -76,7 +79,8 @@
         <div id="cobro">
             <p id="precioCobro" class="escondido"></p>
             <button id="entregarDinero" class="escondido">Entregar Dinero</button>
-            <p id="avisoFaltaRecurso" class=" alerta escondido">Es imposible entregar su pedido por falta de recursos.</p>
+            <p id="avisoFaltaRecurso" class=" alerta escondido">Es imposible entregar su pedido por falta de recursos.
+            </p>
 
         </div>
         <!-- div mostrar recursos -->
@@ -115,6 +119,7 @@
         <div id="botonDeshabilitado" class="alerta escondido">
             <p>Se deshabilito el boton por falta de recursos</p>
         </div>
+        <div class="vacio"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./cafetera2.js"></script>
