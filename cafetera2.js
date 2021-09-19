@@ -33,7 +33,7 @@ $(document).ready(function () {
 
     //FUNCION PARA AGREGAR COSAS AL MENU
     function agregar(bebida) {
-        menu.push(bebida);
+        menu.push(bebida)
     };
     //---------------------------------------------------------------------------------
     //FUNCION buscar MENU
@@ -233,6 +233,15 @@ $(document).ready(function () {
             pedido = '';
             localStorage.setItem('recursos', JSON.stringify(recursos))
             localStorage.setItem('dinero', dineroMaquina);
+            const URLGET = "https://jsonplaceholder.typicode.com/posts";
+            $.post(URLGET, recursos, (respuesta, estado) => {
+                if (estado === 'success') {
+                    console.log(respuesta)
+                }
+            })
+
+
+
         };
         $('#entregarDinero').fadeOut();
     });
@@ -298,6 +307,47 @@ $(document).ready(function () {
     });
 
     //----------------------------------------------------------------------------------------
+    // Boton euros - pesos
+    $('input[type=radio][name="UYU-EUR"]').change(function () {
+        alert('cambio')
+        let EURO = 0;
+        if ($('input[name="UYU-EUR"]:checked').val() == 'EUR') {
+            $.ajax({
+                url: 'http://data.fixer.io/api/latest?access_key=aaee95f4359b70536d622d85338dbbab',
+                method: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+                    EURO = data.rates.UYU;
+                    for (let beb of menu) {
+                        beb.costo = (beb.costo / EURO).toFixed(2)
+                    }
+                    localStorage.setItem('menu', JSON.stringify(menu));
+                    iniciarCafetera()
+                }
+            });
+        }
+        else if ($('input[name="UYU-EUR"]:checked').val() == 'UYU') {
+            alert('UYU')
+            $.ajax({
+                url: 'http://data.fixer.io/api/latest?access_key=aaee95f4359b70536d622d85338dbbab',
+                method: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+                    EURO = data.rates.UYU;
+                    menu = []
+                    let menuAlmacenado = JSON.parse(localStorage.getItem('menu'))
+                    for (elementoAlmacenado of menuAlmacenado) {
+                        elementoAlmacenado.costo = parseInt(parseFloat(elementoAlmacenado.costo) * EURO)
+                        agregar(new Bebida(elementoAlmacenado.nombre, elementoAlmacenado.agua, elementoAlmacenado.leche, elementoAlmacenado.cafe, elementoAlmacenado.costo))
+                    };
+                    localStorage.setItem('menu', JSON.stringify(menu));
+                    iniciarCafetera()
+                }
+            })
+            iniciarCafetera()
+        };
+    });
+    //-----------------------------------------------------------------------------------------
     //Boton Ordenes
 
     $('#formOrdenes button').on("click", function (e) {
