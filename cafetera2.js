@@ -309,7 +309,7 @@ $(document).ready(function () {
     //----------------------------------------------------------------------------------------
     // Boton euros - pesos
     $('input[type=radio][name="UYU-EUR"]').change(function () {
-        alert('cambio')
+        
         let EURO = 0;
         if ($('input[name="UYU-EUR"]:checked').val() == 'EUR') {
             $.ajax({
@@ -327,8 +327,7 @@ $(document).ready(function () {
             });
         }
         else if ($('input[name="UYU-EUR"]:checked').val() == 'UYU') {
-            alert('UYU')
-            $.ajax({
+                        $.ajax({
                 url: 'http://data.fixer.io/api/latest?access_key=aaee95f4359b70536d622d85338dbbab',
                 method: 'GET',
                 dataType: 'JSON',
@@ -337,7 +336,7 @@ $(document).ready(function () {
                     menu = []
                     let menuAlmacenado = JSON.parse(localStorage.getItem('menu'))
                     for (elementoAlmacenado of menuAlmacenado) {
-                        elementoAlmacenado.costo = parseInt(parseFloat(elementoAlmacenado.costo) * EURO)
+                        elementoAlmacenado.costo = Math.round(parseFloat(elementoAlmacenado.costo) * EURO)
                         agregar(new Bebida(elementoAlmacenado.nombre, elementoAlmacenado.agua, elementoAlmacenado.leche, elementoAlmacenado.cafe, elementoAlmacenado.costo))
                     };
                     localStorage.setItem('menu', JSON.stringify(menu));
